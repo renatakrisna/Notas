@@ -45,7 +45,10 @@ export const RegistroScreen = ({ navigation }) => {
                 style={styles.input}
             />
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
-            <Button title="Registrar" onPress={handleRegister} />
+            <Button 
+            title="Registrar" 
+            onPress={handleRegister}
+            color="#FF8096" />
         </View>
     );
 };

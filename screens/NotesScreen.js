@@ -80,7 +80,11 @@ export const NotesScreen = ({ navigation }) => {
                 onChangeText={setNote}
                 style={styles.input}
             />
-            <Button title="Add Note" onPress={addNote} />
+            <Button 
+            title="Add Note" 
+            onPress={addNote}
+            color="#FF8096" />
+
             <FlatList
                 data={notes}
                 keyExtractor={item => item.id}
@@ -109,7 +113,7 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 40,
-        borderColor: 'gray',
+        borderColor: 'black',
         borderWidth: 1,
         marginBottom: 12,
         paddingHorizontal: 8,
@@ -117,7 +121,7 @@ const styles = StyleSheet.create({
     note: {
         padding: 16,
         borderBottomWidth: 1,
-        borderBottomColor: 'gray',
+        borderBottomColor: 'black',
     },
 });
 

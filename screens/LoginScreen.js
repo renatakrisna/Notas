@@ -31,7 +31,7 @@ export const LoginScreen = ({ navigation }) => {
         <View style={styles.container}>
             <View style={{ alignItems: "center", justifyContent: "center" , marginBottom: 50}}>
                 <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 25 }}>
-                    Seja bem-vindo, faça seu Login
+                    Bem-vindo, faça seu Login!
                 </Text>
             </View>
             <TextInput
@@ -48,8 +48,18 @@ export const LoginScreen = ({ navigation }) => {
                 style={styles.input}
             />
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
-            <Button title="Login" onPress={handleLogin} style={{ marginTop: 10 }} />
-            <Button title="Registrar" onPress={handleRegister} style={{ marginTop: 20 }}/>
+            <Button 
+            title="Login" 
+            onPress={handleLogin}
+            style={styles.button}
+            color="#FF8096"/>
+            <Text></Text>
+            <Button 
+            title="Registrar" 
+            onPress={handleRegister}
+            style={styles.button}
+            color="#FF8096"/>
+            
         </View>
     );
 };
@@ -62,15 +72,21 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 40,
-        borderColor: 'gray',
+        borderColor: 'black',
         borderWidth: 1,
-        marginBottom: 12,
+        marginBottom: 15,
         paddingHorizontal: 8,
     },
     errorText: {
         color: 'red',
         marginBottom: 12,
     },
+    button:{
+        borderWidth: 1,
+        marginBottom: 20,
+        color: '#FFC0CB',
+   
+    }
 });
 
 export default LoginScreen;
