@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, FlatList, Pressable } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, FlatList, Pressable, Modal, TouchableOpacity } from 'react-native';
 import { getFirestore, collection, getDocs, query, addDoc, deleteDoc, doc, setDoc } from 'firebase/firestore'
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -7,6 +7,8 @@ export const NotesScreen = ({ navigation }) => {
     const [note, setNote] = useState('');
     const [edita, setEdita] = useState('');
     const [notes, setNotes] = useState([]);
+    const [id, setId] = useState('')
+    const [modalVisible, setModalVisible] = useState(false);
     const db = getFirestore();
 
     useFocusEffect(
@@ -33,10 +35,14 @@ export const NotesScreen = ({ navigation }) => {
         setNotes(lista);
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id, deleta) => {
         try {
-            await deleteDoc(doc(db, "notes", id));
-            buscaNotas()
+            setModalVisible(!modalVisible)
+            if(deleta){
+                await deleteDoc(doc(db, "notes", id));
+                buscaNotas()
+            }
+            
         } catch (error) {
             alert(error)
         }
@@ -56,6 +62,7 @@ export const NotesScreen = ({ navigation }) => {
                     });
                     setEdita('')
                     setNote('');
+                    alert('Nota editada com sucesso!')
                     buscaNotas();
                 } else {
                     await addDoc(collection(db, "notes"), {
@@ -63,7 +70,6 @@ export const NotesScreen = ({ navigation }) => {
                         userID: 'xxxx'
                     });
                     setNote('');
-                    alert('Note created successfully');
                     buscaNotas();
                 }
             } catch (error) {
@@ -80,10 +86,47 @@ export const NotesScreen = ({ navigation }) => {
                 onChangeText={setNote}
                 style={styles.input}
             />
-            <Button 
-            title="Add Note" 
-            onPress={addNote}
-            color="#FF8096" />
+            <TouchableOpacity
+                style={{
+                    width: '100%',
+                    padding: 10,
+                    borderColor: 'red',
+                    borderRadius: 30,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: "#FF8096"
+                }}
+                onPress={addNote}
+            >
+                <Text style={{ color: '#fff'}}>ADD NOTE</Text>
+            </TouchableOpacity>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    alert('A caixa de diálogo foi encerrada');
+                    setModalVisible(!modalVisible);
+                }}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Deseja realmente deletar este registro?</Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 8 }}>
+                            <Pressable
+                                style={[styles.button, styles.buttonClose]}
+                                onPress={() => handleDelete(id, true)}>
+                                <Text style={styles.textStyle}>Sim</Text>
+                            </Pressable>
+                            <Pressable
+                                style={[styles.button, styles.buttonClose]}
+                                onPress={() => setModalVisible(!modalVisible)}>
+                                <Text style={styles.textStyle}>Não</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
 
             <FlatList
                 data={notes}
@@ -92,7 +135,10 @@ export const NotesScreen = ({ navigation }) => {
                 renderItem={({ item }) => (
                     <Pressable
                         onPress={() => handleEdit(item.id, item.text)}
-                        onLongPress={() => handleDelete(item.id)}
+                        onLongPress={() => {
+                            setId(item.id)
+                            setModalVisible(true)
+                        }}
                     >
                         <View style={styles.note} >
                             <Text>{item.text}</Text>
@@ -122,6 +168,47 @@ const styles = StyleSheet.create({
         padding: 16,
         borderBottomWidth: 1,
         borderBottomColor: 'black',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    button: {
+        borderRadius: 10,
+        padding: 10,
+        elevation: 2,
+    },
+    buttonOpen: {
+        backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+        backgroundColor: "#FF8096",
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
     },
 });
 

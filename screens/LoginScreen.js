@@ -1,11 +1,11 @@
 // screens/LoginScreen.js
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Text } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 
 export const LoginScreen = ({ navigation }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('ifbadavi@gmail.com');
+    const [password, setPassword] = useState('123456');
     const [error, setError] = useState('');
     const auth = getAuth()
 
@@ -48,17 +48,36 @@ export const LoginScreen = ({ navigation }) => {
                 style={styles.input}
             />
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
-            <Button 
-            title="Login" 
-            onPress={handleLogin}
-            style={styles.button}
-            color="#FF8096"/>
-            <Text></Text>
-            <Button 
-            title="Registrar" 
-            onPress={handleRegister}
-            style={styles.button}
-            color="#FF8096"/>
+            <TouchableOpacity
+                style={{
+                    width: '100%',
+                    padding: 10,
+                    borderColor: 'red',
+                    borderRadius: 30,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: "#FF8096"
+                }}
+                onPress={handleLogin}
+            >
+                <Text style={{ color: '#fff'}}>Login</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+                style={{
+                    width: '100%',
+                    padding: 10,
+                    borderColor: 'red',
+                    borderRadius: 30,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: "#FF8096",
+                    marginTop:10
+                }}
+                onPress={handleRegister}
+            >
+                <Text style={{ color: '#fff'}}>Registrar</Text>
+            </TouchableOpacity>
             
         </View>
     );
